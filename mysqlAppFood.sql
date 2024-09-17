@@ -377,3 +377,43 @@ INSERT INTO orders (user_id, food_id, amount, discount_code, arr_sub_id) VALUES
 # trigger
 
 # phân quyền user trong SQL
+
+
+#           Bài tập
+
+ # Tìm 5 người đã like nhà hàng nhiều nhất
+ SELECT u.full_name, COUNT(lr.like_res_id) AS total_likes
+FROM users u
+INNER JOIN like_res lr ON u.user_id = lr.user_id
+GROUP BY u.full_name
+ORDER BY total_likes DESC
+LIMIT 5;
+
+ # Tìm 2 người có lượt like nhiều nhất 
+ SELECT r.restaurant_name, COUNT(l.like_id) AS like_count
+FROM restaurants r
+JOIN likes l ON r.restaurant_id = l.restaurant_id
+GROUP BY r.restaurant_name
+ORDER BY like_count DESC
+LIMIT 2;
+
+
+ # Tìm người đã đặt hàng nhiều nhất
+ SELECT u.full_name, COUNT(o.order_id) AS total_orders
+FROM users u
+INNER JOIN orders o ON u.user_id = o.user_id
+GROUP BY u.full_name
+ORDER BY total_orders DESC
+LIMIT 1;
+
+ # Tìm người dùng không hoạt động trong hệ thống (không đặt hàng , không like, không đánh giá nhà hàng)
+ SELECT u.full_name
+FROM users u
+LEFT JOIN orders o ON u.user_id = o.user_id
+LEFT JOIN likes l ON u.user_id = l.user_id
+LEFT JOIN reviews r ON u.user_id = r.user_id
+WHERE o.order_id IS NULL
+  AND l.like_id IS NULL
+  AND r.review_id IS NULL;
+
+  
